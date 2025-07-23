@@ -6,45 +6,37 @@ from pynput.keyboard import Listener, KeyCode
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer
 
-# Toggle key (you can change it if you like)
 TOGGLE_KEY = KeyCode(char="z")
 
 clicking = False
 mouse = Controller()
 
-# Function to handle mouse clicks with optimized speed
 def clicker():
     while True:
         if clicking:
             mouse.click(Button.left, 1)
-            time.sleep(0.0001)  # Super-fast clicking speed
+            time.sleep(0.0001)
 
-# Create the GUI window using PyQt5
 class AutoClickerApp(QWidget):
-    # Define a signal to update the status label
     update_status_signal = pyqtSignal()
 
     def __init__(self):
         super().__init__()
         self.initUI()
 
-        # Start the clicker thread in background
         self.click_thread = threading.Thread(target=clicker, daemon=True)
         self.click_thread.start()
 
-        # Start listening for keyboard events
         self.listener = Listener(on_press=self.toggle_event)
         self.listener.start()
 
-        # Connect the signal to the update_status function
         self.update_status_signal.connect(self.update_status)
 
     def initUI(self):
         self.setWindowTitle("Auto Clicker")
         self.setFixedSize(300, 200)
 
-        # Set the font and layout
-        font = "Calibri"
+        font = "Calibre"
         self.setStyleSheet("""
             QWidget {
                 background-color: #f0f0f0;
@@ -69,14 +61,11 @@ class AutoClickerApp(QWidget):
             }
         """)
 
-        # Create UI components
         self.status_label = QLabel("Clicking: INACTIVE", self)
         self.toggle_button = QPushButton("Toggle Auto-Clicker", self)
 
-        # Set button action
         self.toggle_button.clicked.connect(self.toggle_clicker)
 
-        # Layout configuration
         layout = QVBoxLayout()
         layout.addWidget(self.status_label)
         layout.addWidget(self.toggle_button)
@@ -85,9 +74,8 @@ class AutoClickerApp(QWidget):
     def toggle_clicker(self):
         global clicking
         if not clicking:
-            # Add a delay before starting the clicker
-            self.toggle_button.setEnabled(False)  # Disable the button during the delay
-            QTimer.singleShot(2000, self.start_clicking)  # 2 seconds delay before starting
+            self.toggle_button.setEnabled(False)
+            QTimer.singleShot(2000, self.start_clicking)
             self.status_label.setText("Clicking: WAITING 2s...")
         else:
             clicking = False
@@ -108,7 +96,6 @@ class AutoClickerApp(QWidget):
         global clicking
         if key == TOGGLE_KEY:
             clicking = not clicking
-            # Update the status via signal
             self.update_status_signal.emit()
 
 if __name__ == "__main__":
