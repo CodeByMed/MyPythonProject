@@ -4,7 +4,7 @@ import threading
 from pynput.mouse import Controller, Button
 from pynput.keyboard import Listener, KeyCode
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout
-from PyQt5.QtCore import Qt, pyqtSignal, QTimer
+from PyQt5.QtCore import pyqtSignal, QTimer
 
 TOGGLE_KEY = KeyCode(char="z")
 
